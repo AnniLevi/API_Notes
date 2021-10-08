@@ -13,17 +13,20 @@ from rest_framework.mixins import (ListModelMixin, CreateModelMixin, RetrieveMod
                                    UpdateModelMixin, DestroyModelMixin)
 from rest_framework.viewsets import ModelViewSet
 
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .permissions import IsAuthorOrReadOnly
 
-# viewsets
+
+# viewset
 class NoteViewSet(ModelViewSet):
-    queryset = Note.objects.all()
+    queryset = Note.objects.select_related('author')
     serializer_class = NoteSerializer
-    # http_method_names = ('get', 'post')
+    permission_classes = (IsAuthorOrReadOnly,)
+    # http_method_names = ('get', 'post')  # будут доступны только перечисленные методы
 
     def list(self, request, *args, **kwargs):  # не обязательно
-        notes = Note.objects.all()
         context = {'request': request}
-        serializer = ThinNoteSerializer(notes, many=True, context=context)
+        serializer = ThinNoteSerializer(self.queryset, many=True, context=context)
         return Response(serializer.data)
 
     def perform_create(self, serializer):
