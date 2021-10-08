@@ -26,6 +26,9 @@ class NoteViewSet(ModelViewSet):
         serializer = ThinNoteSerializer(notes, many=True, context=context)
         return Response(serializer.data)
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
 
 # generics
 class NoteListGView(generics.ListCreateAPIView):

@@ -7,6 +7,11 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         fields = '__all__'
 
+    author = serializers.SerializerMethodField(read_only=True)
+
+    def get_author(self, obj):
+        return obj.author.email
+
 
 class ThinNoteSerializer(serializers.ModelSerializer):
     class Meta:
