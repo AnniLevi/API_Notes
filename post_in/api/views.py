@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from notes.models import Note
-from api.serializers import NoteSerializer, ThinNoteSerializer
+from api.serializers import NoteSerializer, ThinNoteSerializer, UserSerializer
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -13,8 +13,16 @@ from rest_framework.mixins import (ListModelMixin, CreateModelMixin, RetrieveMod
                                    UpdateModelMixin, DestroyModelMixin)
 from rest_framework.viewsets import ModelViewSet
 
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from .permissions import IsAuthorOrReadOnly
+from django.contrib.auth import get_user_model
+
+
+class UserViewSet(ModelViewSet):
+    model = get_user_model()
+    queryset = model.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAdminUser, )
 
 
 # viewset

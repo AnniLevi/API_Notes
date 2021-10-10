@@ -7,6 +7,7 @@ from rest_framework.routers import DefaultRouter
 # router
 router = DefaultRouter()
 router.register(prefix='notes', viewset=apiviews.NoteViewSet, basename='notes')
+router.register(prefix='users', viewset=apiviews.UserViewSet, basename='users')
 urlpatterns = router.urls
 
 
